@@ -28,7 +28,10 @@ public class Worker {
      */
     public Worker(String name) {
         // TODO: implement this constructor as described in the Javadoc above.
-    	
+    	if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Worker name must not be null or blank.");
+        }
+        this.name = name;
     }
 
     /**
@@ -45,7 +48,17 @@ public class Worker {
      */
     public double calculateFee(Parcel parcel) {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	if (parcel == null) {
+            return 0.0;
+        }
+        double baseFee = (parcel.getWeight() * 0.5) + (parcel.getVolume() * 0.1) + (parcel.getDaysInDepot() * 0.2);
+        
+        if (parcel.getId() != null && parcel.getId().startsWith("X")) {
+            baseFee *= 0.9; // Apply 10% discount
+        }
+        
+        // Round to 2 decimal places
+        return Math.round(baseFee * 100.0) / 100.0;
     }
 
     /**
@@ -59,8 +72,40 @@ public class Worker {
      */
     public ProcessingResult processNextCustomer(CustomerQueue queue, ParcelMap parcels) {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	if (queue == null || queue.isEmpty()) {
+            return ProcessingResult.failure("Queue is empty.");
+        }
 
-        
+        Customer customer = queue.peek();
+        if (customer == null) {
+            return ProcessingResult.failure("No customer at the front of the queue.");
+        }
+
+        if (parcels == null) {
+            return ProcessingResult.failure("Parcel map is null.");
+        }
+
+        Parcel parcel = parcels.getParcel(customer.getParcelId());
+        if (parcel == null) {
+            return ProcessingResult.failure("Parcel not found: " + customer.getParcelId());
+        }
+
+        if (parcel.isCollected()) {
+            return ProcessingResult.failure("Parcel already collected: " + parcel.getId());
+        }
+
+        // Remove customer from the queue since we are processing them
+        queue.dequeue();
+
+        // Calculate fee and mark parcel as collected
+        double fee = calculateFee(parcel);
+        parcel.setCollected(true);
+
+        // Log the successful event
+        String logMessage = String.format("Worker %s processed customer %s (%d). Parcel %s collected, fee £%.2f",
+                name, customer.getName(), customer.getSequenceNumber(), parcel.getId(), fee);
+        Log.getInstance().logEvent(logMessage);
+
+        return ProcessingResult.success(customer, parcel, fee);
     }
 }
