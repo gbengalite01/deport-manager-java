@@ -46,7 +46,39 @@ public final class DataLoader {
      *                                    fields, or holds invalid parcel data
      */
     public static List<Parcel> loadParcels(String filePath) throws IOException, InvalidParcelDataException {
-       
+        List<Parcel> parcels = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                // Ignore blank lines and comment lines starting with '#'
+                if (line.isEmpty() || line.startsWith("#")) {
+                    continue;
+                }
+
+                String[] parts = line.split(",");
+                if (parts.length != 6) {
+                    throw new InvalidParcelDataException("Invalid parcel line format (expected 6 fields): " + line);
+                }
+
+                try {
+                    String id = parts[0].trim();
+                    double weight = Double.parseDouble(parts[1].trim());
+                    double length = Double.parseDouble(parts[2].trim());
+                    double width = Double.parseDouble(parts[3].trim());
+                    double height = Double.parseDouble(parts[4].trim());
+                    int daysInDepot = Integer.parseInt(parts[5].trim());
+
+                    Parcel parcel = new Parcel(id, weight, length, width, height, daysInDepot);
+                    parcels.add(parcel);
+                } catch (NumberFormatException e) {
+                    throw new InvalidParcelDataException("Invalid number format in parcel line: " + line);
+                }
+            }
+        }
+
+        return parcels;
     }
 
     /**
@@ -59,6 +91,35 @@ public final class DataLoader {
      *                     three fields
      */
     public static List<Customer> loadCustomers(String filePath) throws IOException, NumberFormatException {
-        
+        List<Customer> customers = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                // Ignore blank lines and comment lines starting with '#'
+                if (line.isEmpty() || line.startsWith("#")) {
+                    continue;
+                }
+
+                String[] parts = line.split(",");
+                if (parts.length != 3) {
+                    throw new IOException("Invalid customer line format (expected 3 fields): " + line);
+                }
+
+                try {
+                    int sequenceNumber = Integer.parseInt(parts[0].trim());
+                    String name = parts[1].trim();
+                    String parcelId = parts[2].trim();
+
+                    Customer customer = new Customer(sequenceNumber, name, parcelId);
+                    customers.add(customer);
+                } catch (IllegalArgumentException e) {
+                    throw new IOException("Invalid data in customer line: " + line, e);
+                }
+            }
+        }
+
+        return customers;
     }
 }
