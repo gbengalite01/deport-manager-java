@@ -31,7 +31,10 @@ public class ParcelMap {
      */
     public void addParcel(Parcel parcel) {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	if (parcel == null) {
+            throw new IllegalArgumentException("Parcel must not be null.");
+        }
+        parcels.put(parcel.getId(), parcel);
     }
 
     /**
@@ -40,7 +43,7 @@ public class ParcelMap {
      */
     public Parcel getParcel(String id) {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	return parcels.get(id);
     }
 
     /**
@@ -49,7 +52,7 @@ public class ParcelMap {
      */
     public boolean containsParcel(String id) {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	return parcels.containsKey(id);
     }
 
     /**
@@ -60,7 +63,7 @@ public class ParcelMap {
      */
     public Parcel removeParcel(String id) {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	return parcels.remove(id);
     }
 
     /**
@@ -68,7 +71,7 @@ public class ParcelMap {
      */
     public int size() {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	return parcels.size();
     }
 
     /**
@@ -77,7 +80,7 @@ public class ParcelMap {
      */
     public List<Parcel> getAllParcels() {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	return Collections.unmodifiableList(new ArrayList<>(parcels.values()));
     }
 
     /**
@@ -86,7 +89,13 @@ public class ParcelMap {
      */
     public List<Parcel> getUncollectedParcels() {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	List<Parcel> uncollected = new ArrayList<>();
+        for (Parcel parcel : parcels.values()) {
+            if (!parcel.isCollected()) {
+                uncollected.add(parcel);
+            }
+        }
+        return uncollected;
     }
 
     /**
@@ -99,7 +108,22 @@ public class ParcelMap {
      */
     public List<Parcel> getUncollectedSortedByDaysInDepot() {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	List<Parcel> list = getUncollectedParcels();
+        
+        // Plain insertion sort
+        for (int i = 1; i < list.size(); i++) {
+            Parcel key = list.get(i);
+            int j = i - 1;
+            
+            // Sort in descending order of days in depot (oldest/most days first)
+            while (j >= 0 && list.get(j).getDaysInDepot() < key.getDaysInDepot()) {
+                list.set(j + 1, list.get(j));
+                j--;
+            }
+            list.set(j + 1, key);
+        }
+        
+        return list;
     }
     
 }

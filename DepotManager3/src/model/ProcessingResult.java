@@ -41,7 +41,10 @@ public final class ProcessingResult {
      */
     public static ProcessingResult success(Customer customer, Parcel parcel, double fee) {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	String parcelId = (parcel != null) ? parcel.getId() : "";
+        String customerName = (customer != null) ? customer.getName() : "";
+        String message = String.format("Parcel %s collected by %s, fee £%.2f", parcelId, customerName, fee);
+        return new ProcessingResult(true, message, customer, parcel, fee);
     }
 
     /**
