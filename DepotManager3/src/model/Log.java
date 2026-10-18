@@ -42,7 +42,10 @@ public final class Log {
      */
     public static synchronized Log getInstance() {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	if (instance == null) {
+            instance = new Log();
+        }
+        return instance;
     }
 
     /**
@@ -54,7 +57,8 @@ public final class Log {
      */
     public void logEvent(String message) {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	String timestamp = LocalDateTime.now().format(TIMESTAMP_FORMAT);
+        buffer.append("[").append(timestamp).append("] ").append(message).append(System.lineSeparator());
     }
 
     /**
@@ -75,7 +79,10 @@ public final class Log {
      */
     public void writeToFile(String filePath) throws IOException {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	try (PrintWriter writer = new PrintWriter(
+                new OutputStreamWriter(new FileOutputStream(filePath), StandardCharsets.UTF_8))) {
+            writer.print(buffer.toString());
+        }
     }
 
     /**
