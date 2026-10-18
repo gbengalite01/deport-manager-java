@@ -43,9 +43,32 @@ public class Parcel {
     public Parcel(String id, double weight, double length, double width,
                   double height, int daysInDepot) throws InvalidParcelDataException {
         // TODO: implement this constructor as described in the Javadoc above.
-    	
+    	if (id == null || !ID_PATTERN.matcher(id).matches()) {
+            throw new InvalidParcelDataException("Invalid parcel ID format: " + id);
+        }
+        if (weight <= 0) {
+            throw new InvalidParcelDataException("Weight must be strictly positive.");
+        }
+        if (length <= 0) {
+            throw new InvalidParcelDataException("Length must be strictly positive.");
+        }
+        if (width <= 0) {
+            throw new InvalidParcelDataException("Width must be strictly positive.");
+        }
+        if (height <= 0) {
+            throw new InvalidParcelDataException("Height must be strictly positive.");
+        }
+        if (daysInDepot < 0) {
+            throw new InvalidParcelDataException("Days in depot must not be negative.");
+        }
 
-       
+        this.id = id;
+        this.weight = weight;
+        this.length = length;
+        this.width = width;
+        this.height = height;
+        this.daysInDepot = daysInDepot;
+        this.collected = false;
     }
 
     /**
@@ -117,7 +140,7 @@ public class Parcel {
      */
     public double getVolume() {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	return length * width * height;
     }
 
     /**
@@ -129,7 +152,10 @@ public class Parcel {
     @Override
     public boolean equals(Object o) {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Parcel parcel = (Parcel) o;
+        return Objects.equals(id, parcel.id);
     }
 
     /**
@@ -138,7 +164,7 @@ public class Parcel {
     @Override
     public int hashCode() {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	return Objects.hash(id);
     }
 
     /**
@@ -148,6 +174,14 @@ public class Parcel {
     @Override
     public String toString() {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	return "Parcel{" +
+        "id='" + id + '\'' +
+        ", weight=" + weight +
+        ", length=" + length +
+        ", width=" + width +
+        ", height=" + height +
+        ", daysInDepot=" + daysInDepot +
+        ", collected=" + collected +
+        '}';
     }
 }
