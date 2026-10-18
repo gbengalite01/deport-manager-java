@@ -29,19 +29,22 @@ public class CustomerQueue {
      */
     public void enqueue(Customer customer) {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	if (customer == null) {
+            throw new IllegalArgumentException("Customer must not be null.");
+        }
+        queue.offer(customer);
     }
 
     /** Removes and returns the customer at the front of the queue, or null if empty. */
     public Customer dequeue() {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	return queue.poll();
     }
 
     /** Returns the customer at the front of the queue without removing them, or null if empty. */
     public Customer peek() {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	return queue.peek();
     }
 
     /**
@@ -49,7 +52,7 @@ public class CustomerQueue {
      */
     public boolean isEmpty() {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	return queue.isEmpty();
     }
 
     /**
@@ -57,7 +60,7 @@ public class CustomerQueue {
      */
     public int size() {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	return queue.size();
     }
 
     /**
@@ -67,12 +70,12 @@ public class CustomerQueue {
      */
     public boolean removeBySequenceNumber(int sequenceNumber) {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	return queue.removeIf(customer -> customer.getSequenceNumber() == sequenceNumber);
     }
 
     /** An unmodifiable, ordered snapshot of the current queue, for display purposes. */
     public List<Customer> getQueueSnapshot() {
         // TODO: implement this method as described in the Javadoc above.
-    	
+    	return Collections.unmodifiableList(new ArrayList<>(queue));
     }
 }
