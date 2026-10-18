@@ -1,0 +1,16 @@
+# Customer data: sequenceNumber,name,parcelId
+1,John Brown,C101
+2,Mary Smith,C200
+3,Sue Jones,X59
+4,Tim Baker,C45
+5,Brian Hunter,C105
+6,Aisha Patel,C112
+7,David Okafor,X210
+8,Emma Wilson,C88
+9,Liam O'Connor,X73
+10,Grace Mwangi,C415
+11,Oliver Chen,X120
+12,Sophie Turner,C250
+13,Ravi Sharma,C999
+14,Hannah Lee,X301
+15,James Kamau,C101

@@ -1,0 +1,19 @@
+# Compiled output (Eclipse and IntelliJ)
+bin/
+bin-test/
+out/
+*.class
+
+# Files written by the running application
+end_of_day_report.txt
+depot_log.txt
+
+# Personal IDE settings
+.idea/workspace.xml
+.idea/shelf/
+.idea/usage.statistics.xml
+.metadata/
+
+# Operating system files
+.DS_Store
+Thumbs.db
